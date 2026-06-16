@@ -1,0 +1,13 @@
+Brazil E-Commerce Dataset
+        ↓
+Bronze Layer (Raw Delta Tables)
+        ↓
+Silver Layer (Cleaned & Transformed Data)
+        ↓
+Semantic Model
+        ↓
+Power BI Dashboard
+        ↓
+Pipeline Automation
+        ↓
+GitHub Version Control
