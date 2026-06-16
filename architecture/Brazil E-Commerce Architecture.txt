@@ -1,13 +1,21 @@
 Brazil E-Commerce Dataset
         ↓
-Bronze Layer (Raw Delta Tables)
+Bronze Layer
+(Raw Data Ingestion)
         ↓
-Silver Layer (Cleaned & Transformed Data)
+Silver Layer
+(Data Cleaning & Transformation)
+        ↓
+Delta Lake Advanced Concepts
+(Update, Merge, SCD2,
+Time Travel, Deduplication)
+        ↓
+Gold / Business Ready Data
         ↓
 Semantic Model
         ↓
 Power BI Dashboard
         ↓
-Pipeline Automation
+Fabric Pipeline
         ↓
 GitHub Version Control
