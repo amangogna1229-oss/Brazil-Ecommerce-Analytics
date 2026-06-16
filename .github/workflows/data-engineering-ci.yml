@@ -13,6 +13,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Verify README
+        run: test -f README.md
+
       - name: Verify Notebooks Folder
         run: test -d notebooks
 
