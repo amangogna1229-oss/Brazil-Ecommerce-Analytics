@@ -20,7 +20,7 @@ jobs:
         run: test -d notebooks
 
       - name: Verify Dashboard Folder
-        run: test -d dashboard
+        run: test -d dashboardd
 
       - name: Verify Architecture Folder
         run: test -d architecture
