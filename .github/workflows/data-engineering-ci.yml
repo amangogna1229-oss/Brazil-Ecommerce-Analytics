@@ -26,7 +26,7 @@ jobs:
         run: test -d architecture
 
       - name: Verify Pipelines Folder
-        run: test -d pipelines
+        run: test -d pipeline
 
       - name: Verify Dataset Info Folder
         run: test -d dataset_info
