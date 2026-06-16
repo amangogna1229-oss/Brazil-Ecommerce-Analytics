@@ -1,0 +1,32 @@
+name: Data Engineering CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Notebooks Folder
+        run: test -d notebooks
+
+      - name: Verify Dashboard Folder
+        run: test -d dashboard
+
+      - name: Verify Architecture Folder
+        run: test -d architecture
+
+      - name: Verify Pipelines Folder
+        run: test -d pipelines
+
+      - name: Verify Dataset Info Folder
+        run: test -d dataset_info
+
+      - name: Success Message
+        run: echo "Data Engineering Project Validation Successful"
