@@ -1,35 +1,117 @@
-name: Data Engineering CI Pipeline
+name: Data Engineering CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+- main
 
 jobs:
-  validation:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+validate:
 
-      - name: List Repository Files
-        run: ls -la
+```
+runs-on: ubuntu-latest
 
-      - name: Verify Notebooks Folder
-        run: test -d notebooks
+steps:
 
-      - name: Verify Dashboard Folder
-        run: test -d dashboardd
+  - name: Checkout Repository
+    uses: actions/checkout@v4
 
-      - name: Verify Architecture Folder
-        run: test -d architecture
+  - name: Validate Architecture Folder
+    run: test -d architecture
 
-      - name: Verify Pipelines Folder
-        run: test -d pipeline
+  - name: Validate Dashboard Folder
+    run: test -d dashboard
 
-      - name: Verify Dataset Info Folder
-        run: test -d dataset_info
+  - name: Validate Notebooks Folder
+    run: test -d notebooks
 
-      - name: Success Message
-        run: echo "Data Engineering Project Validation Successful"
+  - name: Validate Pipelines Folder
+    run: test -d pipelines
+
+  - name: Validate Dataset Info Folder
+    run: test -d dataset_info
+
+  - name: Validate README
+    run: test -f README.md
+
+  - name: Generate Validation Report
+    run: |
+      echo "Validation Successful" > validation_report.txt
+      date >> validation_report.txt
+
+  - name: Upload Validation Report
+    uses: actions/upload-artifact@v4
+    with:
+      name: validation-report
+      path: validation_report.txt
+```
+
+build:
+
+```
+needs: validate
+
+runs-on: ubuntu-latest
+
+steps:
+
+  - uses: actions/checkout@v4
+
+  - name: Create Deployment Package
+    run: |
+      mkdir deploy
+      cp README.md deploy/
+      cp -r architecture deploy/
+      cp -r dashboard deploy/
+
+  - name: Upload Build Artifact
+    uses: actions/upload-artifact@v4
+    with:
+      name: deployment-package
+      path: deploy
+```
+
+deploy:
+
+```
+needs: build
+
+runs-on: ubuntu-latest
+
+permissions:
+  pages: write
+  id-token: write
+
+steps:
+
+  - uses: actions/checkout@v4
+
+  - name: Configure GitHub Pages
+    uses: actions/configure-pages@v5
+
+  - name: Upload Pages Artifact
+    uses: actions/upload-pages-artifact@v3
+    with:
+      path: deploy
+
+  - name: Deploy To GitHub Pages
+    id: deployment
+    uses: actions/deploy-pages@v4
+```
+
+notify:
+
+```
+needs: deploy
+
+runs-on: ubuntu-latest
+
+steps:
+
+  - name: Success Notification
+    run: |
+      echo "Project Validation Successful"
+      echo "Artifact Created"
+      echo "GitHub Pages Deployment Successful"
+```
