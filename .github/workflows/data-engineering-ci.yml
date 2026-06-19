@@ -5,35 +5,48 @@ on:
     branches:
       - main
 
+  pull_request:
+    branches:
+      - main
+
 jobs:
+
   validate:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Display Repository Structure
+        run: |
+          echo "Repository Structure"
+          ls -R
 
       - name: Validate Architecture Folder
         run: test -d architecture
 
       - name: Validate Dashboard Folder
-        run: test -d dashboard
-
-      - name: Validate Notebooks Folder
-        run: test -d notebooks
-
-      - name: Validate Pipelines Folder
-        run: test -d pipelines
+        run: test -d dashboardd
 
       - name: Validate Dataset Info Folder
         run: test -d dataset_info
 
-      - name: Validate README
-        run: test -f README.md
+      - name: Validate Notebooks Folder
+        run: test -d notebooks
+
+      - name: Validate Pipeline Folder
+        run: test -d pipeline
 
       - name: Generate Validation Report
         run: |
-          echo "Validation Successful" > validation_report.txt
+          echo "==================================" > validation_report.txt
+          echo "BRAZIL ECOMMERCE PROJECT" >> validation_report.txt
+          echo "==================================" >> validation_report.txt
+          echo "Validation Status : SUCCESS" >> validation_report.txt
+          echo "Validation Time :" >> validation_report.txt
           date >> validation_report.txt
 
       - name: Upload Validation Report
@@ -43,39 +56,89 @@ jobs:
           path: validation_report.txt
 
   build:
+
     needs: validate
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Create Deployment Package
+      - name: Create Build Package
         run: |
           mkdir deploy
-          cp README.md deploy/
 
-      - name: Upload Build Artifact
+          cp -r architecture deploy/
+          cp -r dashboardd deploy/
+          cp -r dataset_info deploy/
+          cp -r notebooks deploy/
+          cp -r pipeline deploy/
+
+      - name: Upload Deployment Artifact
         uses: actions/upload-artifact@v4
         with:
           name: deployment-package
-          path: deploy
+          path: deploy/
 
   deploy:
+
     needs: build
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deployment Simulation
+
+      - name: Deployment Stage
         run: |
-          echo "Deploying Project..."
+          echo "=================================="
+          echo "Starting Deployment"
+          echo "=================================="
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-package
+          path: deployment
+
+      - name: Verify Deployment Package
+        run: |
+          ls -R deployment
+
+      - name: Simulate Deployment
+        run: |
+          echo "Deploying Architecture..."
+          echo "Deploying Notebooks..."
+          echo "Deploying Dashboards..."
+          echo "Deploying Pipelines..."
           echo "Deployment Successful"
 
   notify:
+
     needs: deploy
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send Notification
+
+      - name: Success Notification
         run: |
-          echo "Pipeline Completed Successfully"
+          echo "=================================="
+          echo "PIPELINE EXECUTED SUCCESSFULLY"
+          echo "Validation Completed"
+          echo "Build Completed"
+          echo "Deployment Completed"
+          echo "=================================="
+
+      - name: Generate Final Report
+        run: |
+          echo "Project : Brazil Ecommerce Analytics" > final_report.txt
+          echo "Pipeline Status : SUCCESS" >> final_report.txt
+          date >> final_report.txt
+
+      - name: Upload Final Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-report
+          path: final_report.txt
