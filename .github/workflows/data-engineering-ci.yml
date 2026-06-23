@@ -96,7 +96,7 @@ jobs:
           echo "Starting Deployment"
           echo "=================================="
 
-      - name: Download Artifact
+      - name: Download Deployment Artifact
         uses: actions/download-artifact@v4
         with:
           name: deployment-package
@@ -122,15 +122,6 @@ jobs:
 
     steps:
 
-      - name: Success Notification
-        run: |
-          echo "=================================="
-          echo "PIPELINE EXECUTED SUCCESSFULLY"
-          echo "Validation Completed"
-          echo "Build Completed"
-          echo "Deployment Completed"
-          echo "=================================="
-
       - name: Generate Final Report
         run: |
           echo "Project : Brazil Ecommerce Analytics" > final_report.txt
@@ -141,46 +132,54 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-report
-          
-  Notify deploy:
+          path: final_report.txt
+
+      - name: Success Notification
+        run: |
+          echo "=================================="
+          echo "PIPELINE EXECUTED SUCCESSFULLY"
+          echo "Validation Completed"
+          echo "Build Completed"
+          echo "Deployment Completed"
+          echo "=================================="
+
+  email:
+
     needs: notify
 
     runs-on: ubuntu-latest
 
     steps:
 
-      - name: Send Email
-
+      - name: Send Email Notification
         uses: dawidd6/action-send-mail@v3
-
         with:
-
           server_address: smtp.gmail.com
           server_port: 465
+          secure: true
 
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
 
-          subject: Brazil Ecommerce Pipeline Success
+          subject: Brazil Ecommerce Analytics Pipeline Success
 
-          to: ${{ secrets.EMAIL_USERNAME }}
+          to: ${{ secrets.EMAIL_TO }}
 
           from: GitHub Actions
-
-          secure: true
 
           body: |
             Hello,
 
-            Your GitHub Actions Pipeline completed successfully.
+            Your GitHub Actions pipeline has completed successfully.
 
-            Validation Completed
-            Build Completed
-            Deployment Completed
+            Stages Completed:
+            ✔ Validation
+            ✔ Build
+            ✔ Deployment
+            ✔ Notification
 
             Project:
             Brazil Ecommerce Analytics
 
             Regards,
             GitHub Actions
-          path: final_report.txt
