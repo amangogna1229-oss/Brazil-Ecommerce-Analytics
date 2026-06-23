@@ -159,11 +159,11 @@ jobs:
           secure: true
 
           username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
 
           subject: Brazil Ecommerce Analytics Pipeline Success
 
-          to: ${{ secrets.EMAIL_TO }}
+          to: ${{ secrets.EMAIL_USERNAME }}
 
           from: GitHub Actions
 
