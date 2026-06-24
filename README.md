@@ -16,8 +16,6 @@ Bronze Layer
     ↓
 Silver Layer
     ↓
-Gold Layer
-    ↓
 Warehouse
     ↓
 Semantic Model
